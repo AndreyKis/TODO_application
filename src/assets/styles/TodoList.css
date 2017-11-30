@@ -1,0 +1,56 @@
+.todo {
+  text-align: center;
+}
+
+.todo-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.todo-header {
+  background-color: #222;
+  height: 160px;
+  padding: 20px;
+  color: white;
+}
+
+.todo-title {
+  font-size: 1.5em;
+}
+
+.list-loading {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.table-custom {
+  border-radius: 5px;
+  width: 60%;
+  margin: 20px auto 20px;
+  float: none;
+}
+
+.table-bordered > tbody > tr > td,
+.table-bordered > thead > tr > th,
+.table-bordered {
+  border-right:0;
+  border-left: 0;
+}
+
+thead > tr > th {
+  text-align: center;
+}
+
+.icon-button {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
