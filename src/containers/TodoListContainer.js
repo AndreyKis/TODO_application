@@ -14,6 +14,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         deleteTodoItem: (itemId) => {
             dispatch(TodoListActions.deleteTodoItem(itemId));
+        },
+        completeTodoItem: (item) => {
+            dispatch(TodoListActions.completeTodoItem(item));
         }
     }
 };

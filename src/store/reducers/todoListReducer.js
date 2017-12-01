@@ -2,7 +2,9 @@ import * as TodoListActions from '../actions/todoListActions';
 
 const initialState = {
     isLoading: false,
-    deletingItemId: null,
+    itemsInProcessIds: [],
+    currentPage: 1,
+    perPage: 20,
     items: [],
     error: null
 };
@@ -27,20 +29,23 @@ export default (state = initialState, action) => {
                 error: action.payload.error
             };
         case TodoListActions.DELETE_TODO_ITEM_REQUEST:
+        case TodoListActions.COMPLETE_TODO_ITEM_REQUEST:
             return {
                 ...state,
-                deletingItemId: action.payload.itemId
+                itemsInProcessIds: [...state.itemsInProcessIds, action.payload.itemId || action.payload.item.id]
             };
         case TodoListActions.DELETE_TODO_ITEM_SUCCESS:
+        case TodoListActions.COMPLETE_TODO_ITEM_SUCCESS:
             return {
                 ...state,
-                deletingItemId: null,
+                itemsInProcessIds: action.payload.itemsInProcessIds,
                 items: action.payload.items
             };
         case TodoListActions.DELETE_TODO_ITEM_FAILURE:
+        case TodoListActions.COMPLETE_TODO_ITEM_FAILURE:
             return {
                 ...state,
-                deletingItemId: null,
+                itemsInProcessIds: action.payload.itemsInProcessIds,
                 error: action.payload.error
             };
         default:

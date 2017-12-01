@@ -1,0 +1,7 @@
+.transparent-button {
+    background-color: transparent;
+    border-color: transparent;
+}
+button:active {
+    border: none;
+}

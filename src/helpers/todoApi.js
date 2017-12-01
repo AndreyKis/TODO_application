@@ -1,4 +1,4 @@
-import {post, get, del} from "./request";
+import {post, get, del, put} from "./request";
 
 export async function getTodos(){
     return await get("todos");
@@ -12,7 +12,10 @@ export async function postTodo(todo) {
     return await post("todos", todo);
 }
 
+export async function updateTodo(todo) {
+    return await put(`todos/${todo.id}`, todo);
+}
+
 export async function deleteTodo(todoId) {
-    console.log("Inside todo deleting. Id: ", todoId);
     return await del(`todos/${todoId}`);
 }

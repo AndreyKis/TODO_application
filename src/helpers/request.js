@@ -33,7 +33,6 @@ async function request(path, method, data) {
         console.debug("API client could not parse response body", response.status);
     }
 
-    console.log("Response: ", response, "ResponseData: ", responseData);
     if (response.ok) {
         return {ok: true, data: responseData};
     } else if (response.status === 400 || response.status === 401) {
