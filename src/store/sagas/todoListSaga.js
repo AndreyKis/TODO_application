@@ -67,24 +67,24 @@ function* completeItem(store, action) {
         updatedItem.completed = true;
 
         const itemsResponse = yield updateTodo(updatedItem);
-        if(itemsResponse.ok) {
-            const items = yield select(TodoListActions.selectors.getItems);
-
-            // Mapping is used here, because of the way API updates items. No update happens for real.
-            // In case of true API we would make another call to fetch the new array from server
-            const newItems = items.map((currItem) => {
-                if(currItem.id === item.id) {
-                    currItem = {...updatedItem};
-                }
-
-                return currItem;
-            });
-
-            yield put(TodoListActions.completeTodoItemSuccess(newItems, newItemsInProcess));
+        if(!itemsResponse.ok) {
+            yield put(TodoListActions.completeTodoItemFailure(itemsResponse.error, newItemsInProcess));
             return;
         }
 
-        yield put(TodoListActions.completeTodoItemFailure(itemsResponse.error, newItemsInProcess));
+        const items = yield select(TodoListActions.selectors.getItems);
+
+        // Mapping is used here, because of the way API updates items. No update happens for real.
+        // In case of true API we would make another call to fetch the new array from server
+        const newItems = items.map((currItem) => {
+            if(currItem.id === item.id) {
+                currItem = {...updatedItem};
+            }
+
+            return currItem;
+        });
+
+        yield put(TodoListActions.completeTodoItemSuccess(newItems, newItemsInProcess));
     } catch (e) {
         yield call(TodoListActions.completeTodoItemFailure, e, newItemsInProcess);
     }

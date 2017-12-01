@@ -4,13 +4,15 @@ import React, {Component} from 'react';
 import '../assets/styles/error.css';
 
 class Error extends Component {
+
     render() {
         return (
             <div className="error-message">
-                Something unexpected has happened. Error message: {this.props.error}
+                Something unexpected has happened. Error message: {this.props.error.message}
             </div>
         );
     }
+
 }
 
 PropTypes.propTypes = {

@@ -5,6 +5,7 @@ import '../assets/styles/navbar.css';
 import '../assets/styles/shared.css';
 
 class Navbar extends Component {
+
     render() {
         const {onFilterChanged, onRefresh }= this.props;
         return (
@@ -34,6 +35,7 @@ class Navbar extends Component {
             </nav>
         );
     }
+
 }
 
 PropTypes.propTypes = {
