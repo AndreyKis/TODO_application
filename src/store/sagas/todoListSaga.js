@@ -3,6 +3,7 @@ import {call, takeLatest, takeEvery, select, all, put} from 'redux-saga/effects'
 import * as TodoListActions from '../actions/todoListActions'
 import {getTodos, deleteTodo, updateTodo} from '../../helpers/todoApi'
 
+//FUNCTIONS TO CONNECT TO ACTIONS
 /**
  * Retrieves the whole list of todos
  * @param store
@@ -28,12 +29,12 @@ function* fetchTodoList(store, action) {
  */
 function* deleteTodoItem(store, action) {
     const {itemId} = action.payload;
-    const itemsInProcess = yield select(TodoListActions.selectors.getItemsInProcessIds);
-    const newItemsInProcess = itemsInProcess.filter((item) => item !== itemId);
 
     try {
 
         const itemsResponse = yield deleteTodo(itemId);
+        const newItemsInProcess = yield getNewItemsInProcess(itemId);
+
         const items = yield select(TodoListActions.selectors.getItems);
 
         // Filtering is used here, because of the way API deletes items. No delete happens for real.
@@ -44,6 +45,8 @@ function* deleteTodoItem(store, action) {
             ? yield put(TodoListActions.deleteTodoItemSuccess(newItems, newItemsInProcess))
             : yield put(TodoListActions.deleteTodoItemFailure(itemsResponse.error, newItemsInProcess));
     } catch (e) {
+        const newItemsInProcess = yield getNewItemsInProcess(itemId);
+
         yield call(TodoListActions.deleteTodoItemFailure, e, newItemsInProcess);
     }
 }
@@ -60,13 +63,13 @@ function* completeItem(store, action) {
 
     // Copying item to perform update.
     const updatedItem = {...item};
-    const itemsInProcess = yield select(TodoListActions.selectors.getItemsInProcessIds);
-    const newItemsInProcess = itemsInProcess.filter((currItem) => currItem !== item.id);
 
     try {
         updatedItem.completed = true;
 
         const itemsResponse = yield updateTodo(updatedItem);
+        const newItemsInProcess = yield getNewItemsInProcess(item.id);
+
         if(!itemsResponse.ok) {
             yield put(TodoListActions.completeTodoItemFailure(itemsResponse.error, newItemsInProcess));
             return;
@@ -86,8 +89,16 @@ function* completeItem(store, action) {
 
         yield put(TodoListActions.completeTodoItemSuccess(newItems, newItemsInProcess));
     } catch (e) {
+        const newItemsInProcess = yield getNewItemsInProcess(item.id);
+
         yield call(TodoListActions.completeTodoItemFailure, e, newItemsInProcess);
     }
+}
+
+// HELPER FUNCTIONS
+function* getNewItemsInProcess(itemId) {
+    const itemsInProcess = yield select(TodoListActions.selectors.getItemsInProcessIds);
+    return itemsInProcess.filter((currItem) => currItem !== itemId);
 }
 
 export function* init(store, context) {
