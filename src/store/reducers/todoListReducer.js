@@ -9,6 +9,9 @@ const initialState = {
     error: null
 };
 
+/**
+ *
+ */
 export default (state = initialState, action) => {
     switch (action.type) {
         case TodoListActions.FETCH_TODO_ITEMS_REQUEST:
@@ -32,7 +35,7 @@ export default (state = initialState, action) => {
         case TodoListActions.COMPLETE_TODO_ITEM_REQUEST:
             return {
                 ...state,
-                itemsInProcessIds: [...state.itemsInProcessIds, action.payload.itemId || action.payload.item.id]
+                itemsInProcessIds: [...state.itemsInProcessIds, action.payload.item.id]
             };
         case TodoListActions.DELETE_TODO_ITEM_SUCCESS:
         case TodoListActions.COMPLETE_TODO_ITEM_SUCCESS:

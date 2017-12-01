@@ -8,74 +8,105 @@ import TodoItem from './TodoItem';
 import Navbar from "./Navbar";
 import Error from "./Error";
 
+/**
+ *
+ */
 class TodoList extends Component {
+    state = {
+        filteredItems: []
+    };
 
-    constructor(props) {
-        super(props);
-        this.state = {filteredItems: []};
-    }
+    generateBody = () => {
+        const {isLoading, error, items, deleteTodoItem, completeTodoItem, itemsInProcessIds} = this.props;
+
+        if (isLoading) {
+            return (
+                <img className="list-loading" src={loading} alt="List is being retrieved"/>
+            );
+        }
+
+        if (error) {
+            return (
+                <Error error={error}/>
+            );
+        }
+
+        const {filteredItems} = this.state;
+        const itemsToProcess = (filteredItems && filteredItems.length) ? filteredItems : items;
+
+        const itemComponents = itemsToProcess.map((item) => (
+            <TodoItem
+                item={item}
+                key={item.id}
+                deleteTodoItem={deleteTodoItem}
+                completeTodoItem={completeTodoItem}
+                itemsInProcessIds={itemsInProcessIds}
+            />
+        ));
+
+        return (
+            <div className="col-md-10 col-md-offset-1">
+                <div className="panel panel-primary panel-primary-custom">
+                    <div className="panel-heading">
+                        <h3 className="panel-title">List of todos</h3>
+                    </div>
+                    <div className="panel-body">
+                        Here is your todo list, sir. Do not forget to mark completed todos and remove unnecessary ones
+                    </div>
+                    <table className="todo table table-striped table-hover table-bordered">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Title</th>
+                            <th>Completed</th>
+                            <th>Remove</th>
+                        </tr>
+                        </thead>
+                        <tbody>{itemComponents}</tbody>
+                    </table>
+                </div>
+            </div>
+        )
+    };
+
+    filterByTitle = (event) => {
+        const title = event.target.value;
+        const filteredItems = this.getFilteredItems(title, this.props.items);
+
+        this.setState({title, filteredItems});
+    };
+
+    getFilteredItems = (title, items) => {
+        return items.filter((item) => item.title.toLocaleLowerCase().includes(title.toLowerCase()));
+    };
 
     componentDidMount() {
         this.props.fetchTodoItems();
     }
 
-    render() {
-        const body = this.generateBody();
+    componentWillReceiveProps(nextProps) {
+        const nextItems = nextProps.items;
+        const currItems = this.props.items;
+        const {title, filteredItems} = this.state;
 
+        if (currItems !== nextItems && title && filteredItems && filteredItems.length) {
+            const newFilteredItems = this.getFilteredItems(title, nextItems);
+
+            this.setState({filteredItems: newFilteredItems});
+        }
+    }
+
+    render() {
         return (
-            <div className="todo">
-                <Navbar onFilterChanged={this.filterByTitle} onRefresh={this.props.fetchTodoItems}/>
-                {body}
+            <div>
+                <Navbar
+                    onFilterChanged={this.filterByTitle}
+                    onRefresh={this.props.fetchTodoItems}
+                />
+                {this.generateBody()}
             </div>
         );
     }
-
-    generateBody = () => {
-        const {isLoading, items, error, itemsInProcessIds, completeTodoItem} = this.props;
-
-        const {filteredItems} = this.state;
-
-        const itemsToProcess = filteredItems && filteredItems.length ? filteredItems : items;
-        const itemComponents = itemsToProcess.map(
-            (item) => <TodoItem key={item.id} itemsInProcessIds={itemsInProcessIds}
-                                deleteTodoItem={this.deleteTodoItem} item={item} completeTodoItem={completeTodoItem}/>
-        );
-
-        if (isLoading) {
-            return <img className="list-loading" src={loading} alt="List is being retrieved"/>
-        }
-        if (error) {
-            return <Error error={error}/>
-        }
-
-        return (
-            <table className="table-custom table-hover table-bordered">
-                <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Title</th>
-                    <th>Completed</th>
-                    <th>Remove</th>
-                </tr>
-                </thead>
-                <tbody>{itemComponents}</tbody>
-            </table>
-        )
-    };
-
-    deleteTodoItem = (item) => {
-        this.props.deleteTodoItem(item);
-    };
-
-    filterByTitle = (event) => {
-        if (this.props.items) {
-            const title = event.target.value;
-            const filteredItems = this.props.items.filter((item) => item.title.toLocaleLowerCase().includes(title.toLowerCase()));
-            this.setState({
-                filteredItems
-            })
-        }
-    };
 
 }
 

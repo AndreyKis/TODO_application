@@ -34,6 +34,10 @@
   float: none;
 }
 
+.panel-primary-custom {
+  margin-top: 20px;
+}
+
 .table-bordered > tbody > tr > td,
 .table-bordered > thead > tr > th,
 .table-bordered {

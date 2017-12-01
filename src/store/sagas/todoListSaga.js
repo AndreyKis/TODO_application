@@ -1,7 +1,7 @@
-import {call, takeLatest, takeEvery, select, all, put} from 'redux-saga/effects'
+import {all, call, put, select, takeEvery, takeLatest} from 'redux-saga/effects'
 
 import * as TodoListActions from '../actions/todoListActions'
-import {getTodos, deleteTodo, updateTodo} from '../../helpers/todoApi'
+import * as API from '../../helpers/todoApi'
 
 //FUNCTIONS TO CONNECT TO ACTIONS
 /**
@@ -11,7 +11,8 @@ import {getTodos, deleteTodo, updateTodo} from '../../helpers/todoApi'
  */
 function* fetchTodoList(store, action) {
     try {
-        const itemsResponse = yield getTodos();
+        const itemsResponse = yield API.getTodos();
+
         itemsResponse.ok
             ? yield put(TodoListActions.itemsFetchSuccess(itemsResponse.data))
             : yield put(TodoListActions.itemsFetchFailure(itemsResponse.error));
@@ -31,8 +32,7 @@ function* deleteTodoItem(store, action) {
     const {item} = action.payload;
 
     try {
-
-        const itemsResponse = yield deleteTodo(item.id);
+        const itemsResponse = yield API.deleteTodo(item.id);
         const newItemsInProcess = yield getNewItemsInProcess(item.id);
 
         const items = yield select(TodoListActions.selectors.getItems);
@@ -67,10 +67,10 @@ function* completeItem(store, action) {
     try {
         updatedItem.completed = true;
 
-        const itemsResponse = yield updateTodo(updatedItem);
+        const itemsResponse = yield API.updateTodo(updatedItem);
         const newItemsInProcess = yield getNewItemsInProcess(item.id);
 
-        if(!itemsResponse.ok) {
+        if (!itemsResponse.ok) {
             yield put(TodoListActions.completeTodoItemFailure(itemsResponse.error, newItemsInProcess));
             return;
         }
@@ -80,7 +80,7 @@ function* completeItem(store, action) {
         // Mapping is used here, because of the way API updates items. No update happens for real.
         // In case of true API we would make another call to fetch the new array from server
         const newItems = items.map((currItem) => {
-            if(currItem.id === item.id) {
+            if (currItem.id === item.id) {
                 currItem = {...updatedItem};
             }
 
@@ -98,14 +98,20 @@ function* completeItem(store, action) {
 // HELPER FUNCTIONS
 /**
  * Function to return an array of items in process,
- * based on the array from store and itemID which has already been processed
+ * based on the array from store and itemID which has already been processed.
+ *
  * @param itemId An id of item, which has already been processed and needs o be removed from array
  */
 function* getNewItemsInProcess(itemId) {
-    const itemsInProcess = yield select(TodoListActions.selectors.getItemsInProcessIds);
-    return itemsInProcess.filter((currItem) => currItem !== itemId);
+    const newItems = yield select(TodoListActions.selectors.getItemsInProcessIds);
+    return newItems.filter((currItem) => currItem !== itemId);
 }
 
+/**
+ *
+ * @param store
+ * @param context
+ */
 export function* init(store, context) {
     yield all([
         takeLatest(TodoListActions.FETCH_TODO_ITEMS_REQUEST, fetchTodoList, store),

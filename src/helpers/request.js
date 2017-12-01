@@ -4,6 +4,7 @@ import {API_URL} from '../constants'
 
 /**
  * Function to build request of any type with any parameters, including body.
+ *
  * @param path Parameter, which defines concret path, which will be added to base api path
  * @param method One of the next: GET, POST, PUT, DELETE
  * @param data Data to put into body
@@ -44,6 +45,7 @@ async function request(path, method, data) {
 
 /**
  * Outer interface to create post request
+ *
  * @param path
  * @param data
  */
@@ -53,6 +55,7 @@ export async function post(path, data) {
 
 /**
  * Outer interface to create put request
+ *
  * @param path
  * @param data
  */
@@ -62,6 +65,7 @@ export async function put(path, data) {
 
 /**
  * Outer interface to create del request
+ *
  * @param path
  * @param data
  */
@@ -71,6 +75,7 @@ export async function del(path, data) {
 
 /**
  * Outer interface to create get request
+ *
  * @param path
  * @param query An object of key-value pairs, which need to be converted into query params
  */

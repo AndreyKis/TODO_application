@@ -2,3 +2,12 @@
     height: 25px;
     width: 25px;
 }
+.td-custom {
+    text-align: left;
+}
+.fa-check-custom {
+    color: green;
+}
+.fa-custom-red {
+    color: red;
+}

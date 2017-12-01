@@ -1,4 +1,4 @@
-import { createSelector } from "reselect";
+import {createSelector} from "reselect";
 
 export const FETCH_TODO_ITEMS_REQUEST = "FETCH_TODO_ITEMS_REQUEST";
 export const FETCH_TODO_ITEMS_SUCCESS = "FETCH_TODO_ITEMS_SUCCESS";
@@ -19,6 +19,7 @@ export const COMPLETE_TODO_ITEM_FAILURE = "COMPLETE_TODO_ITEM_FAILURE";
 export function fetchTodoItems() {
     return {type: FETCH_TODO_ITEMS_REQUEST};
 }
+
 /**
  * Identifies successful fetch of the list of items
  * @param items
@@ -29,6 +30,7 @@ export function itemsFetchSuccess(items) {
         payload: {items}
     }
 }
+
 /**
  * Identifies failed fetch of the list of items
  * @param reason
@@ -50,6 +52,7 @@ export function deleteTodoItem(item) {
         payload: {item}
     };
 }
+
 /**
  * Identifies successful delete of an item
  * @param items
@@ -61,6 +64,7 @@ export function deleteTodoItemSuccess(items, itemsInProcessIds) {
         payload: {items, itemsInProcessIds}
     }
 }
+
 /**
  * Identifies failed delete of an item
  * @param reason
@@ -83,6 +87,7 @@ export function completeTodoItem(item) {
         payload: {item}
     };
 }
+
 /**
  * Identifies successful complete of an item
  * @param items
@@ -94,6 +99,7 @@ export function completeTodoItemSuccess(items, itemsInProcessIds) {
         payload: {items, itemsInProcessIds}
     }
 }
+
 /**
  * Identifies failed complete of an item
  * @param reason
