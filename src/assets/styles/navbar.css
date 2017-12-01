@@ -1,3 +1,11 @@
 .custom-navbar {
     margin: 5px 50px 0;
 }
+.navbar-nav {
+    float: none;
+    text-align: center;
+}
+.navbar-nav div > button {
+    float: none;
+    display: inline-block;
+}

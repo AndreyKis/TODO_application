@@ -52,7 +52,7 @@ class TodoItem extends Component {
         return itemsInProcessIds && itemsInProcessIds.length && itemsInProcessIds.includes(item.id)
             ? <img className="item-loading" src={loading} alt="Item is being processed"/>
             : (
-                <button onClick={() => deleteTodoItem(item.id)} className="transparent-button">
+                <button onClick={() => deleteTodoItem(item)} className="transparent-button">
                     <i className="fa fa-trash" style={{color: "red"}} aria-hidden="true"/>
                 </button>
             );

@@ -63,8 +63,8 @@ class TodoList extends Component {
         )
     };
 
-    deleteTodoItem = (itemId) => {
-        this.props.deleteTodoItem(itemId);
+    deleteTodoItem = (item) => {
+        this.props.deleteTodoItem(item);
     };
 
     filterByTitle = (event) => {

@@ -28,24 +28,24 @@ function* fetchTodoList(store, action) {
  * @param action
  */
 function* deleteTodoItem(store, action) {
-    const {itemId} = action.payload;
+    const {item} = action.payload;
 
     try {
 
-        const itemsResponse = yield deleteTodo(itemId);
-        const newItemsInProcess = yield getNewItemsInProcess(itemId);
+        const itemsResponse = yield deleteTodo(item.id);
+        const newItemsInProcess = yield getNewItemsInProcess(item.id);
 
         const items = yield select(TodoListActions.selectors.getItems);
 
         // Filtering is used here, because of the way API deletes items. No delete happens for real.
         // In case of true API we would make another call to fetch the new array from server
-        const newItems = items.filter((item) => item.id !== itemId);
+        const newItems = items.filter((currItem) => currItem.id !== item.id);
 
         itemsResponse.ok
             ? yield put(TodoListActions.deleteTodoItemSuccess(newItems, newItemsInProcess))
             : yield put(TodoListActions.deleteTodoItemFailure(itemsResponse.error, newItemsInProcess));
     } catch (e) {
-        const newItemsInProcess = yield getNewItemsInProcess(itemId);
+        const newItemsInProcess = yield getNewItemsInProcess(item.id);
 
         yield call(TodoListActions.deleteTodoItemFailure, e, newItemsInProcess);
     }
@@ -96,6 +96,11 @@ function* completeItem(store, action) {
 }
 
 // HELPER FUNCTIONS
+/**
+ * Function to return an array of items in process,
+ * based on the array from store and itemID which has already been processed
+ * @param itemId An id of item, which has already been processed and needs o be removed from array
+ */
 function* getNewItemsInProcess(itemId) {
     const itemsInProcess = yield select(TodoListActions.selectors.getItemsInProcessIds);
     return itemsInProcess.filter((currItem) => currItem !== itemId);

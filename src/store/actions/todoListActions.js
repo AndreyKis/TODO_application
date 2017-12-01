@@ -44,10 +44,10 @@ export function itemsFetchFailure(reason) {
 /**
  * Function to identify the beginning of delete process
  */
-export function deleteTodoItem(itemId) {
+export function deleteTodoItem(item) {
     return {
         type: DELETE_TODO_ITEM_REQUEST,
-        payload: {itemId}
+        payload: {item}
     };
 }
 /**
